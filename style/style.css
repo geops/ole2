@@ -1,0 +1,104 @@
+<style>
+html {
+  margin:0px;
+  padding:0px;
+  height: 100%;
+}
+
+body {
+  margin:0px;
+  padding:0px;
+  height: 100%;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+a.active {
+  font-weight: bold;
+}
+
+#header {
+  border-bottom: 2px solid #61849c;
+  color: #61849c;
+  height: 20px;
+  padding: 20px;
+  text-align: right;
+}
+
+#header a {
+  color: #61849c;
+  margin-right: 10px;
+}
+
+#header a:last-child {
+    margin-right: 0;
+}
+
+#map {
+  height: 100%;
+ }
+
+#app {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #2c3e50;
+  min-height: 100%;
+  overflow: hidden;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+#brand {
+  font-size: 20px;
+  font-weight: bold;
+  height: 60px;
+  line-height: 60px;
+  left: 10px;
+  position: absolute;
+  top: 0;
+}
+
+#promo {
+  position: absolute;
+  bottom: 50px;
+  background-color: red;
+  right: -65px;
+  transform: rotate(-45deg);
+  z-index: 1;
+}
+
+#promo-text {
+  border: 2px solid white;
+  color: white;
+  font-size: 14px;
+  font-family: Sans-Serif;
+  font-weight: bold;
+  margin: 2px;
+  padding: 0 70px;
+}
+
+#promo a:hover {
+  text-decoration: none;
+}
+
+#copyrightDiv {
+  font-family: Arial;
+  font-size: 12px;
+  background-color: rgba(255, 255, 255, 0.7);
+  box-shadow: 1px 2px 4px rgba(0,0,0,0.7);
+  position: absolute;
+  padding: 5px;
+  bottom: 0;
+  left:0;
+  right: 0;
+}
+
+</style>

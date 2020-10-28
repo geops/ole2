@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: editor.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: editor.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import Collection from 'ol/Collection';
+import Toolbar from './toolbar';
+
+/**
+ * Core component of OLE.
+ * All controls are added to this class.
+ */
+class Editor {
+  /**
+   * Initialization of the editor.
+   * @param {ol.Map} map The map object.
+   * @param {Object} [options] Editor options.
+   * @param {Boolean} [options.showToolbar] Whether to show the toolbar.
+   * @param {HTMLElement} [options.target] Specify a target if you want
+   *   the toolbar to be rendered outside of the map's viewport.
+   */
+  constructor(map, opts) {
+    /**
+     * @private
+     * @type {ol.Map}
+     */
+    this.map = map;
+
+    /**
+     * @private
+     * @type {ol.Collection&lt;ole.Control>}
+     */
+    this.controls = new Collection();
+
+    /**
+     * @private
+     * @type {ol.Collection&lt;ole.Control>}
+     */
+    this.activeControls = new Collection();
+
+    /**
+     * @private
+     * @type {ol.Collection&lt;ole.Service>}
+     */
+    this.services = new Collection();
+
+    /**
+     * @private
+     * @type {Object}
+     */
+    this.options = opts || {};
+
+    /**
+     * Feature that is currently edited.
+     * @private
+     * @type {ol.Feature}
+     */
+    this.editFeature = null;
+
+    if (typeof this.options.showToolbar === 'undefined') {
+      this.options.showToolbar = true;
+    }
+
+    if (this.options.showToolbar) {
+      this.toolbar = new Toolbar(this.map, this.controls, this.options.target);
+    }
+  }
+
+  /**
+   * Adds a new control to the editor.
+   * @param {ole.Control} control The control.
+   */
+  addControl(control) {
+    control.setMap(this.map);
+    control.setEditor(this);
+
+    control.addEventListener('change:active', (e) => {
+      this.activeStateChange(e.detail.control);
+    });
+
+    this.controls.push(control);
+  }
+
+  /**
+   * Adds a service to the editor.
+   */
+  addService(service) {
+    service.setMap(this.map);
+    service.setEditor(this);
+    service.activate();
+    this.services.push(service);
+  }
+
+  /**
+   * Adds a collection of controls to the editor.
+   * @param {ol.Collection&lt;ole.Control>} controls Collection of controls.
+   */
+  addControls(controls) {
+    const ctrls = controls instanceof Collection ? controls
+      : new Collection(controls);
+
+    for (let i = 0; i &lt; ctrls.getLength(); i += 1) {
+      this.addControl(ctrls.item(i));
+    }
+  }
+
+  /**
+   * Removes the editor from the map.
+   */
+  remove() {
+    this.controls.forEach((c) => {
+      c.deactivate(true);
+    });
+    if (this.toolbar) {
+      this.toolbar.destroy();
+    }
+  }
+
+  /**
+   * Returns a list of ctive controls.
+   * @returns {ol.Collection.&lt;ole.Control>} Active controls.
+   */
+  getControls() {
+    return this.controls;
+  }
+
+  /**
+   * Returns a list of active controls.
+   * @returns {ol.Collection.&lt;ole.Control>} Active controls.
+   */
+  getActiveControls() {
+    return this.activeControls;
+  }
+
+  /**
+   * Sets an instance of the feature that is edited.
+   * Some controls need information about the feature
+   * that is currently edited (e.g. for not snapping on them).
+   * @param {ol.Feature|null} feature The editfeature (or null if none)
+   * @protected
+   */
+  setEditFeature(feature) {
+    this.editFeature = feature;
+  }
+
+  /**
+   * Returns the feature that is currently edited.
+   * @returns {ol.Feature|null} The edit feature.
+   */
+  getEditFeature() {
+    return this.editFeature;
+  }
+
+  /**
+   * Controls use this function for triggering activity state changes.
+   * @param {ol.control.Control} control Control.
+   * @private
+   */
+  activeStateChange(ctrl) {
+    // Deactivate other controls that are not standalone
+    if (ctrl.getActive() &amp;&amp; ctrl.standalone) {
+      for (let i = 0; i &lt; this.controls.getLength(); i += 1) {
+        const otherCtrl = this.controls.item(i);
+        if (otherCtrl !== ctrl &amp;&amp; otherCtrl.getActive() &amp;&amp; otherCtrl.standalone) {
+          otherCtrl.deactivate();
+          this.activeControls.remove(otherCtrl);
+        }
+      }
+    }
+
+    if (ctrl.getActive()) {
+      this.activeControls.push(ctrl);
+    } else {
+      this.activeControls.remove(ctrl);
+    }
+  }
+}
+
+export default Editor;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Editor.html">Editor</a></li><li><a href="ole.BufferControl.html">BufferControl</a></li><li><a href="ole.CadControl.html">CadControl</a></li><li><a href="ole.Control.html">Control</a></li><li><a href="ole.Difference.html">Difference</a></li><li><a href="ole.DrawControl.html">DrawControl</a></li><li><a href="ole.Intersection.html">Intersection</a></li><li><a href="ole.ModifyControl.html">ModifyControl</a></li><li><a href="ole.RotateControl.html">RotateControl</a></li><li><a href="ole.Service.html">Service</a></li><li><a href="ole.service.LocalStorage.html">LocalStorage</a></li><li><a href="ole.service.Storage.html">Storage</a></li><li><a href="ole.service.Storage_Storage.html">Storage</a></li><li><a href="ole.Toolbar.html">Toolbar</a></li><li><a href="ole.TopologyControl.html">TopologyControl</a></li><li><a href="ole.Union.html">Union</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Wed Oct 28 2020 09:46:24 GMT+0000 (UTC)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
