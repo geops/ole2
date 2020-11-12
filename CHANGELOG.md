@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/geops/openlayers-editor/compare/v1.2.0-beta.1...v1.2.0) (2020-11-12)
+
+
+### Bug Fixes
+
+* use the document as keyboard target event ([6e66d48](https://github.com/geops/openlayers-editor/commit/6e66d4896639f6f854e86ae6ce88d03f6ddf7598))
+
 ## [1.2.0-beta.1](https://github.com/geops/openlayers-editor/compare/v1.2.0-beta.0...v1.2.0-beta.1) (2020-11-11)
 
 
